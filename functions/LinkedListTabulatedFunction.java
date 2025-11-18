@@ -210,8 +210,10 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
 
     //реализация методов Externalizable
     public void writeExternal(ObjectOutput out) throws IOException {
+        //записываем количество точек
         out.writeInt(pointsCount);
 
+        //записываем все точки (x, y) по порядку
         FunctionNode current = head.next;
         for (int i = 0; i < pointsCount; i++) {
             out.writeDouble(current.point.getX());
@@ -221,20 +223,29 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
     }
 
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        pointsCount = in.readInt();
+        //читаем количество точек
+        int count = in.readInt();
 
-        if (pointsCount < 2) {
-            throw new IOException("Некорректное количество точек: " + pointsCount);
+        if (count < 2) {
+            throw new IOException("Некорректное количество точек: " + count);
         }
 
+        //полностью переинициализируем список
         initList();
 
-        //читаем и создаем точки
-        for (int i = 0; i < pointsCount; i++) {
+        //читаем и создаем все точки
+        for (int i = 0; i < count; i++) {
             double x = in.readDouble();
             double y = in.readDouble();
-            addNodeToTail().point = new FunctionPoint(x, y);
+
+            //Создаем новую точку и добавляем в конец списка
+            FunctionNode newNode = addNodeToTail();
+            newNode.point = new FunctionPoint(x, y);
         }
+
+        //сбрасываем оптимизационные поля
+        lastNode = head.next;  // первая реальная точка
+        lastIndex = 0;
     }
 
     //МЕТОДЫ таб. ф-ии

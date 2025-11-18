@@ -114,8 +114,12 @@ public class Main {
         //создаем две табулированные функции
         TabulatedFunction arrayFunc = TabulatedFunctions.tabulate(composition, 0, 10, 11);
 
-        // Создаем LinkedListTabulatedFunction через правильный конструктор
-        TabulatedFunction listFunc = TabulatedFunctions.tabulate(composition, 0, 10, 11);
+        //создаем LinkedListTabulatedFunction(через конструктор с массивом точек)
+        FunctionPoint[] points = new FunctionPoint[11];
+        for (int i = 0; i <= 10; i++) {
+            points[i] = new FunctionPoint(i, i); 
+        }
+        TabulatedFunction listFunc = new LinkedListTabulatedFunction(points);
 
         //вывод исходных функций
         System.out.println("Исходные функции:");
